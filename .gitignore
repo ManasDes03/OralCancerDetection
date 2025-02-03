@@ -1,2 +1,7 @@
 *.Identifier
 *.png
+datasets/*
+*.jpg
+*.json
+*.csv
+*.jpeg
