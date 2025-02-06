@@ -28,31 +28,38 @@ oral-cancer-detection/
 All project settings are managed via `config.yaml`:
 
 ```yaml
+# General Configuration
 dataset:
-  name: "Oral_Cancer"        # Options: "Oral_Cancer", "Oral_Cancer_2.0", "Sri_Lankan"
-  image_size: [224, 224]     # Image dimensions (height, width)
+  name: "Oral_Cancer"    # Options: "Oral_Cancer", "Oral_Cancer_2.0", "Sri_Lankan"
+  image_size: [224, 224] # Specify image size (height, width)
   batch_size: 32
-  num_classes: 2             # Binary classification: cancer vs non-cancer
+  num_classes: 2         # Assuming binary classification: cancer vs non-cancer
+  
+model:
+  name: "EfficientNetB0"      # Options: "EfficientNetB0", "MobileNetV2", "ResNet50", "InceptionV3"
+  weights: "imagenet"         # Use "imagenet" for pre-trained weights, or "None" for random initialization
+  trainable: False            # Set to True for fine-tuning the base model
 
+# Dataset Paths
 paths:
   Oral_Cancer:
-    train_dir: "data/Oral_Cancer/train"
-    val_dir: "data/Oral_Cancer/val"
+    images_dir: "data/OralCancer"
 
   Oral_Cancer_2.0:
-    train_dir: "data/Oral_Cancer_2.0/train"
-    val_dir: "data/Oral_Cancer_2.0/val"
+    images_dir: "data/Oral_Cancer_Dataset_2.0"
 
   Sri_Lankan:
-    images_dir: "data/Sri_Lankan_Dataset/images"
-    annotations_file: "data/Sri_Lankan_Dataset/labels.csv"
+    images_dir: "data/Sri_Lankan_Dataset/Images"
+    annotations_file: "data/Sri_Lankan_Dataset/Imagewise_Data.csv"
 
+# Training Configuration
 training:
   learning_rate: 0.001
   epochs: 20
-  optimizer: "adam"          # Options: "adam", "sgd", "rmsprop"
+  optimizer: "adam"       # Options: "adam", "sgd", "rmsprop"
   loss_function: "categorical_crossentropy"
   metrics: ["accuracy"]
+
 ```
 
 ---
