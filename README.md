@@ -10,8 +10,8 @@ This project aims to detect oral cancer from medical images using deep learning 
 - **`data/`** – Stores datasets (Oral Cancer, Oral, Sri Lankan). Update `dataloader.py` to add new datasets.  
 - **`dataloader/`** – Contains `dataloader.py` for loading datasets.  
 - **`experiments/`** – Stores timestamp-based experiment results (config, loss plots, metrics).  
-- **`legacy_code/`** – Contains older code (e.g., Anshul’s work).  
-- **`models/`** – Includes `model.py` defining Inception, MobileNet, ResNet, EfficientNet models.  
+- **`legacy/`** – Contains older code (e.g., Anshul’s work).  
+- **`model/`** – Includes `model.py` defining Inception, MobileNet, ResNet, EfficientNet models.  
 - **`config.py`** – Configuration file for hyperparameters.  
 - **`main.py`** – Main script to run models (`python main.py`).  
 - **`requirements.txt`** – Lists dependencies (`pip install -r requirements.txt`).  
