@@ -18,8 +18,8 @@ def compile_model(model, config):
     # Dynamic optimizer selection
     optimizers = {
         "adam": tf.keras.optimizers.Adam,
-        "sgd": tf.keras.optimizers.SGD,
-        "rmsprop": tf.keras.optimizers.RMSprop
+        # "sgd": tf.keras.optimizers.SGD,
+        # "rmsprop": tf.keras.optimizers.RMSprop
     }
 
     optimizer = optimizers.get(optimizer_name, tf.keras.optimizers.Adam)(learning_rate=learning_rate)

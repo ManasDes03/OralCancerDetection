@@ -13,16 +13,14 @@ model:
 # Dataset Paths
 paths:
   Oral_Cancer:
-    train_dir: "data/Oral_Cancer/train"
-    val_dir: "data/Oral_Cancer/val"
+    images_dir: "data/OralCancer"
 
   Oral_Cancer_2.0:
-    train_dir: "data/Oral_Cancer_2.0/train"
-    val_dir: "data/Oral_Cancer_2.0/val"
+    images_dir: "data/Oral_Cancer_Dataset_2.0"
 
   Sri_Lankan:
-    images_dir: "data/Sri_Lankan_Dataset/images"
-    annotations_file: "data/Sri_Lankan_Dataset/labels.csv"
+    images_dir: "data/Sri_Lankan_Dataset/Images"
+    annotations_file: "data/Sri_Lankan_Dataset/Imagewise_Data.csv"
 
 # Training Configuration
 training:

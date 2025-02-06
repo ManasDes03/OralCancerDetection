@@ -27,7 +27,7 @@ class OralCancerModel(tf.keras.Model):
         self.model = models.Sequential([
             self.base_model,
             layers.GlobalAveragePooling2D(),
-            layers.Dropout(0.5),
+            # layers.Dropout(0.5),
             layers.Dense(128, activation='relu'),
             layers.Dense(self.num_classes, activation='softmax')
         ])
