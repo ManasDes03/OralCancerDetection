@@ -1,6 +1,6 @@
 *.Identifier
 *.png
-datasets/*
+data/*
 *.jpg
 *.json
 *.csv

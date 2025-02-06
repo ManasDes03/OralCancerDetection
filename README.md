@@ -6,14 +6,6 @@ This project aims to detect oral cancer from medical images using deep learning 
 
 ---
 
-## 🚀 Features
-- **Multi-Dataset Support:** Handles different dataset structures seamlessly.
-- **Configurable Pipeline:** Adjust dataset, image size, batch size, and more through a simple `config.yaml` file.
-- **Modular Architecture:** Clean separation between data loading, model architecture, and training scripts.
-- **Binary Classification:** Classifies images into `cancer` or `non-cancer` categories.
-
----
-
 ## 📁 Project Structure
 
 ```
@@ -71,22 +63,26 @@ training:
 ```
 data/
 └── Oral_Cancer/
-    ├── train/
-    │   ├── cancer/
-    │   └── non-cancer/
-    └── val/
-        ├── cancer/
-        └── non-cancer/
+    |
+    ├── cancer/
+    |   ├── image1.jpg
+    │   └── image2.jpg
+    └── non-cancer/
+        ├── image1.jpg
+        └── image2.jpg
 ```
 
 ### 2️⃣ **Sri Lankan Dataset**
 ```
 data/
 └── Sri_Lankan_Dataset/
-    ├── images/
+    ├── Images
     │   ├── image1.jpg
     │   └── image2.jpg
-    └── labels.csv
+    ├── Annotation.json
+    ├── Patientwise_Data.csv
+    └── Imagewise_Data.csv
+    
 ```
 
 **CSV Format Example:**
@@ -149,12 +145,6 @@ python main.py
 - Add data augmentation techniques.
 - Experiment with transfer learning using pre-trained models (e.g., ResNet, VGG).
 - Implement advanced evaluation metrics and visualization tools (e.g., confusion matrix).
-
----
-
-## 📜 License
-
-This project is open-source and available under the [MIT License](LICENSE).
 
 ---
 
