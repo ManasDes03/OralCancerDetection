@@ -102,7 +102,9 @@ image2.jpg,1
 
 ### 2️⃣ Create a Virtual Environment
 ```bash
-conda create -n oral_cancer_detection python=3.9
+conda create -n oral_cancer_detection python=3.10
+conda init
+source ~/.bashrc
 conda activate oral_cancer_detection
 ```
 
@@ -111,7 +113,7 @@ conda activate oral_cancer_detection
 pip install tensorflow pyyaml pandas
 ```
 
-Or if using a `requirements.txt`:
+Or if using `requirements.txt`:
 ```bash
 pip install -r requirements.txt
 ```
