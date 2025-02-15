@@ -1,62 +1,127 @@
 import tensorflow as tf
 import pandas as pd
 import os
+import json
+import random
+import matplotlib.pyplot as plt
+import numpy as np
+import cv2
 
-def get_data_loaders(config):
-    dataset_name = config['dataset']['name']
+def get_classification_data_loader(config):
     image_size = tuple(config['dataset']['image_size'])
     batch_size = config['dataset']['batch_size']
+    dataset_name = config['dataset']['name']
+    
+    def process_image(file_path, label):
+        image = tf.io.read_file(file_path)
+        image = tf.image.decode_jpeg(image, channels=3)
+        image = tf.image.resize(image, image_size)
+        image = image / 255.0  # Normalize
+        return image, label
+    
+    cancer_dir = config['paths'][dataset_name]['cancer_dir']
+    non_cancer_dir = config['paths'][dataset_name]['non_cancer_dir']
+    
+    cancer_images = [os.path.join(cancer_dir, f) for f in os.listdir(cancer_dir) if f.endswith(".jpg")]
+    non_cancer_images = [os.path.join(non_cancer_dir, f) for f in os.listdir(non_cancer_dir) if f.endswith(".jpg")]
+    
+    file_paths = cancer_images + non_cancer_images
+    labels = [1] * len(cancer_images) + [0] * len(non_cancer_images)
+    
+    dataset_size = len(file_paths)
+    indices = list(range(dataset_size))
+    random.shuffle(indices)
+    
+    train_end = int(0.8 * dataset_size)
+    val_end = train_end + int(0.1 * dataset_size)
+    
+    train_files = [file_paths[i] for i in indices[:train_end]]
+    train_labels = [labels[i] for i in indices[:train_end]]
+    val_files = [file_paths[i] for i in indices[train_end:val_end]]
+    val_labels = [labels[i] for i in indices[train_end:val_end]]
+    test_files = [file_paths[i] for i in indices[val_end:]]
+    test_labels = [labels[i] for i in indices[val_end:]]
+    
+    train_ds = tf.data.Dataset.from_tensor_slices((train_files, train_labels)).map(process_image).batch(batch_size)
+    val_ds = tf.data.Dataset.from_tensor_slices((val_files, val_labels)).map(process_image).batch(batch_size)
+    test_ds = tf.data.Dataset.from_tensor_slices((test_files, test_labels)).map(process_image).batch(batch_size)
+    
+    return train_ds, val_ds, test_ds, test_files, test_labels
 
-    if dataset_name in ["Oral_Cancer", "Oral_Cancer_2.0"]:
-        # For Oral Cancer and Oral Cancer 2.0 datasets
-        train_dir = config['paths'][dataset_name]['train_dir']
-        val_dir = config['paths'][dataset_name]['val_dir']
+def get_mscoco_data_loader(config):
+    image_size = tuple(config['dataset']['image_size'])
+    batch_size = config['dataset']['batch_size']
+    images_dir = config['paths']['Sri_Lankan']['images_dir']
+    annotations_file = config['paths']['Sri_Lankan']['annotations_file']
+    
+    with open(annotations_file, 'r') as f:
+        annotations = json.load(f)
+    
+    file_paths = []
+    annotations_map = {}
+    
+    for annotation in annotations['images']:
+        image_path = os.path.join(images_dir, annotation['file_name'])
+        file_paths.append(image_path)
+        image_id = annotation['id']
+        annotations_map[image_path] = [ann for ann in annotations['annotations'] if ann['image_id'] == image_id]
+    
+    dataset_size = len(file_paths)
+    indices = list(range(dataset_size))
+    random.shuffle(indices)
+    
+    train_end = int(0.8 * dataset_size)
+    val_end = train_end + int(0.1 * dataset_size)
+    
+    train_files = [file_paths[i] for i in indices[:train_end]]
+    val_files = [file_paths[i] for i in indices[train_end:val_end]]
+    test_files = [file_paths[i] for i in indices[val_end:]]
+    
+    return train_files, val_files, test_files, annotations_map
 
-        train_ds = tf.keras.preprocessing.image_dataset_from_directory(
-            train_dir,
-            image_size=image_size,
-            batch_size=batch_size,
-            label_mode='categorical'
-        )
-
-        val_ds = tf.keras.preprocessing.image_dataset_from_directory(
-            val_dir,
-            image_size=image_size,
-            batch_size=batch_size,
-            label_mode='categorical'
-        )
-
-    elif dataset_name == "Sri_Lankan":
-        # For Sri Lankan Dataset
-        images_dir = config['paths'][dataset_name]['images_dir']
-        annotations_file = config['paths'][dataset_name]['annotations_file']
-
-        # Load CSV annotations
-        df = pd.read_csv(annotations_file)
-
-        # Function to process images and labels
-        def process_image(file_path, label):
-            image = tf.io.read_file(file_path)
-            image = tf.image.decode_jpeg(image, channels=3)
-            image = tf.image.resize(image, image_size)
-            image = image / 255.0  # Normalize the image
-            return image, tf.one_hot(label, depth=config['dataset']['num_classes'])
-
-        # Map CSV entries to full image paths and labels
-        file_paths = df['image_name'].apply(lambda x: os.path.join(images_dir, x)).values
-        labels = df['label'].values  # Assuming label column contains 0 (non-cancer) or 1 (cancer)
-
-        # Create TensorFlow Dataset
-        dataset = tf.data.Dataset.from_tensor_slices((file_paths, labels))
-        dataset = dataset.map(process_image)
-
-        # Split into training and validation (80-20 split)
-        dataset_size = len(df)
-        train_size = int(0.8 * dataset_size)
-        train_ds = dataset.take(train_size).batch(batch_size)
-        val_ds = dataset.skip(train_size).batch(batch_size)
-
-    else:
-        raise ValueError(f"Unsupported dataset: {dataset_name}")
-
-    return train_ds, val_ds
+if __name__ == "__main__":
+    config = {
+        "dataset": {
+            "name": "Sri_Lankan",
+            "image_size": [224, 224],
+            "batch_size": 32
+        },
+        "paths": {
+            "Sri_Lankan": {
+                "images_dir": "./data/Sri_Lankan_Dataset/Images",
+                "annotations_file": "./data/Sri_Lankan_Dataset/Annotation.json"
+            }
+        }
+    }
+    
+    train_files, val_files, test_files, annotations_map = get_mscoco_data_loader(config)
+    print("Training set size:", len(train_files))
+    print("Validation set size:", len(val_files))
+    print("Testing set size:", len(test_files))
+    
+    # Show a random test image with segmentation
+    random_index = random.randint(0, len(test_files) - 1)
+    image_path = test_files[random_index]
+    
+    image = tf.io.read_file(image_path)
+    image = tf.image.decode_jpeg(image, channels=3)
+    image = tf.image.resize(image, (224, 224))
+    image = image.numpy()
+    
+    plt.imshow(image / 255.0)
+    plt.axis("off")
+    plt.title("Lesion and Oral Cavity Segmentation")
+    
+    # Plot segmentation masks
+    if image_path in annotations_map:
+        for annotation in annotations_map[image_path]:
+            segmentation = annotation['segmentation']
+            for segment in segmentation:
+                polygon = np.array(segment).reshape((-1, 2))
+                polygon[:, 0] *= image.shape[1] / annotation['width']
+                polygon[:, 1] *= image.shape[0] / annotation['height']
+                polygon = polygon.astype(np.int32)
+                cv2.polylines(image, [polygon], isClosed=True, color=(255, 0, 0), thickness=2)
+        plt.imshow(image / 255.0)
+    
+    plt.show()
