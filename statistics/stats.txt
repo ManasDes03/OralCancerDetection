@@ -1,0 +1,10 @@
+Total number of entries: 608
+
+Statistics for Age:
+Mean: 48.29
+Median: 47.00
+Mode: 30.00
+Standard Deviation: 12.51
+Max: 85.00
+Min: 30.00
+
