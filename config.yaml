@@ -1,31 +1,26 @@
 # General Configuration
 dataset:
-  name: "Oral_Cancer"    # Options: "Oral_Cancer", "Oral_Cancer_2.0", "Sri_Lankan"
+  name: "Sri_Lankan"    # Options: "Oral_Cancer", "Oral_Cancer_2.0", "Sri_Lankan"
   image_size: [224, 224] # Specify image size (height, width)
-  batch_size: 32
-  num_classes: 2         # Assuming binary classification: cancer vs non-cancer
+  batch_size: 8
+  num_classes: 4         # OPMD, Benign, Healthy, OCA (update if more classes)
   
 model:
-  name: "EfficientNetB0"      # Options: "EfficientNetB0", "MobileNetV2", "ResNet50", "InceptionV3"
+  name: "MobileNetV2"      # Options: "EfficientNetB0", "MobileNetV2", "ResNet50", "InceptionV3"
   weights: "imagenet"         # Use "imagenet" for pre-trained weights, or "None" for random initialization
   trainable: False            # Set to True for fine-tuning the base model
 
 # Dataset Paths
 paths:
-  Oral_Cancer:
-    images_dir: "data/OralCancer"
-
-  Oral_Cancer_2.0:
-    images_dir: "data/Oral_Cancer_Dataset_2.0"
-
   Sri_Lankan:
     images_dir: "data/Sri_Lankan_Dataset/Images"
-    annotations_file: "data/Sri_Lankan_Dataset/Imagewise_Data.csv"
+    annotations_file: "data/Sri_Lankan_Dataset/Imagewise_Data (2).csv"
+
 
 # Training Configuration
 training:
   learning_rate: 0.001
   epochs: 20
   optimizer: "adam"       # Options: "adam", "sgd", "rmsprop"
-  loss_function: "categorical_crossentropy"
-  metrics: ["accuracy"]
+  loss_function: "sparse_categorical_crossentropy"
+  metrics: ["sparse_categorical_accuracy"]

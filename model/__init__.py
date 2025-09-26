@@ -1,1 +1,1 @@
-from .models import OralCancerModel
+from .model import OralCancerModel
