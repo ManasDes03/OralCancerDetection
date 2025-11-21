@@ -7,57 +7,109 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 
+
+# --- Module-level image processing functions for use in main.py ---
+def process_image(file_path, label, image_size=(224,224)):
+    image = tf.io.read_file(file_path)
+    try:
+        image = tf.image.decode_jpeg(image, channels=3, try_recover_truncated=True)
+    except Exception as e:
+        tf.print("[ERROR] Could not decode image:", file_path, ". Skipping. Error:", e)
+        image = tf.zeros([*image_size, 3], dtype=tf.float32)
+        label = tf.constant(-1, dtype=tf.int32)
+    image = tf.image.resize(image, image_size)
+    image = tf.cast(image, tf.float32) / 255.0
+    label = tf.cast(label, tf.int32)
+    tf.debugging.assert_type(image, tf.float32, message="Image is not float32")
+    tf.debugging.assert_type(label, tf.int32, message="Label is not int32")
+    tf.print("[DEBUG][PROCESS_IMAGE] image dtype:", image.dtype, ", label:", label)
+    return image, label
+
+def process_image_aug(file_path, label, image_size=(224,224)):
+    image = tf.io.read_file(file_path)
+    try:
+        image = tf.image.decode_jpeg(image, channels=3, try_recover_truncated=True)
+    except Exception as e:
+        tf.print("[ERROR] Could not decode image:", file_path, ". Skipping. Error:", e)
+        image = tf.zeros([*image_size, 3], dtype=tf.float32)
+        label = tf.constant(-1, dtype=tf.int32)
+    image = tf.image.resize(image, image_size)
+    image = tf.cast(image, tf.float32) / 255.0
+    label = tf.cast(label, tf.int32)
+    tf.debugging.assert_type(image, tf.float32, message="Image is not float32 (aug)")
+    tf.debugging.assert_type(label, tf.int32, message="Label is not int32 (aug)")
+    tf.print("[DEBUG][PROCESS_IMAGE_AUG] image dtype:", image.dtype, ", label:", label)
+    # ...existing code...
+    # --- Data Augmentation ---
+    image = tf.image.random_flip_left_right(image)
+    image = tf.image.random_flip_up_down(image)
+    image = tf.image.random_brightness(image, max_delta=0.15)
+    image = tf.image.random_contrast(image, lower=0.8, upper=1.2)
+    image = tf.image.rot90(image, k=tf.random.uniform(shape=[], minval=0, maxval=4, dtype=tf.int32))
+    # Random zoom
+    import numpy as np
+    scales = list(np.arange(0.8, 1.0, 0.01))
+    boxes = np.zeros((len(scales), 4))
+    for i, scale in enumerate(scales):
+        x1 = y1 = 0.5 - (0.5 * scale)
+        x2 = y2 = 0.5 + (0.5 * scale)
+        boxes[i] = [y1, x1, y2, x2]
+    def random_crop(img):
+        crop_size = tf.shape(img)[:2]
+        crops = tf.image.crop_and_resize(
+            tf.expand_dims(img, 0),
+            boxes=boxes,
+            box_indices=np.zeros(len(scales)),
+            crop_size=crop_size
+        )
+        return crops[tf.random.uniform(shape=[], minval=0, maxval=len(scales), dtype=tf.int32)]
+    image = tf.cond(tf.random.uniform([], 0, 1) > 0.5, lambda: random_crop(image), lambda: image)
+    # Random translation
+    def random_translate(img):
+        tx = tf.random.uniform([], -0.1, 0.1) * tf.cast(tf.shape(img)[0], tf.float32)
+        ty = tf.random.uniform([], -0.1, 0.1) * tf.cast(tf.shape(img)[1], tf.float32)
+        import tensorflow_addons as tfa
+        return tfa.image.translate(img, [tx, ty])
+    try:
+        import tensorflow_addons as tfa
+        image = tf.cond(tf.random.uniform([], 0, 1) > 0.5, lambda: random_translate(image), lambda: image)
+    except ImportError:
+        pass
+    # Color jitter (hue, saturation)
+    image = tf.image.random_hue(image, max_delta=0.08)
+    image = tf.image.random_saturation(image, lower=0.8, upper=1.2)
+    # Gaussian noise
+    def add_noise(img):
+        noise = tf.random.normal(shape=tf.shape(img), mean=0.0, stddev=0.05, dtype=tf.float32)
+        return tf.clip_by_value(img + noise, 0.0, 1.0)
+    image = tf.cond(tf.random.uniform([], 0, 1) > 0.7, lambda: add_noise(image), lambda: image)
+    # --- End Data Augmentation ---
+    image = image / 255.0
+    tf.print("[DEBUG][PROCESS_IMAGE_AUG] image dtype:", image.dtype, ", label:", label)
+    return image, tf.cast(label, tf.int32)
+
 def get_classification_data_loader(config):
     image_size = tuple(config['dataset']['image_size'])
     batch_size = config['dataset']['batch_size']
     dataset_name = config['dataset']['name']
-    
-    def process_image(file_path, label):
-        image = tf.io.read_file(file_path)
-        try:
-            image = tf.image.decode_jpeg(image, channels=3)
-        except:
-            image = tf.image.decode_jpeg(image, channels=1)
-            image = tf.image.grayscale_to_rgb(image)
-        image = tf.image.resize(image, image_size)
-        image = image / 255.0
-        return image, label
-
-    def process_image_aug(file_path, label):
-        image = tf.io.read_file(file_path)
-        try:
-            image = tf.image.decode_jpeg(image, channels=3)
-        except:
-            image = tf.image.decode_jpeg(image, channels=1)
-            image = tf.image.grayscale_to_rgb(image)
-        image = tf.image.resize(image, image_size)
-        # --- Data Augmentation ---
-        image = tf.image.random_flip_left_right(image)
-        image = tf.image.random_flip_up_down(image)
-        image = tf.image.random_brightness(image, max_delta=0.1)
-        image = tf.image.random_contrast(image, lower=0.9, upper=1.1)
-        image = tf.image.rot90(image, k=tf.random.uniform(shape=[], minval=0, maxval=4, dtype=tf.int32))
-        # --- End Data Augmentation ---
-        image = image / 255.0
-        return image, label
 
     if dataset_name == "Sri_Lankan":
         images_dir = config['paths'][dataset_name]['images_dir']
         annotations_file = config['paths'][dataset_name]['annotations_file']
         df = pd.read_csv(annotations_file)
-        # Only keep rows where the image file exists
         valid_file_paths = []
         valid_labels = []
-        for fname, label in zip(df['image_name'], df['Category']):
+        for fname, label in zip(df['Image Name'], df['Category']):
             img_path = os.path.join(images_dir, str(fname) + ".jpg" if not str(fname).endswith('.jpg') else str(fname))
             if os.path.isfile(img_path):
                 valid_file_paths.append(img_path)
-                valid_labels.append(label)
-        # Use LabelEncoder for multi-class string labels
-        from sklearn.preprocessing import LabelEncoder
-        le = LabelEncoder()
-        labels = le.fit_transform(valid_labels)
-        label_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
+                # Map to binary: OCA->1 (cancer), others->0 (non-cancer)
+                if label == 'OCA':
+                    valid_labels.append(1)
+                else:
+                    valid_labels.append(0)
+        labels = valid_labels
+        label_mapping = {0: 'non-cancer', 1: 'cancer'}
         file_paths = valid_file_paths
     else:
         cancer_dir = config['paths'][dataset_name]['cancer_dir']
@@ -96,9 +148,28 @@ def get_classification_data_loader(config):
     test_files, test_labels = trim_to_batch(test_files, test_labels, batch_size)
 
     train_ds = tf.data.Dataset.from_tensor_slices((train_files, train_labels))
-    train_ds = train_ds.shuffle(buffer_size=len(train_files)).map(process_image_aug).apply(tf.data.experimental.ignore_errors()).batch(batch_size, drop_remainder=True)
-    val_ds = tf.data.Dataset.from_tensor_slices((val_files, val_labels)).map(process_image).apply(tf.data.experimental.ignore_errors()).batch(batch_size, drop_remainder=True)
-    test_ds = tf.data.Dataset.from_tensor_slices((test_files, test_labels)).map(process_image).apply(tf.data.experimental.ignore_errors()).batch(batch_size, drop_remainder=True)
+    train_ds = (
+        train_ds
+        .shuffle(buffer_size=len(train_files))
+        .map(process_image_aug, num_parallel_calls=tf.data.AUTOTUNE)
+        .filter(lambda img, lbl: lbl > -1)
+        .batch(batch_size, drop_remainder=True)
+        .prefetch(tf.data.AUTOTUNE)
+    )
+    val_ds = (
+        tf.data.Dataset.from_tensor_slices((val_files, val_labels))
+        .map(process_image, num_parallel_calls=tf.data.AUTOTUNE)
+        .filter(lambda img, lbl: lbl > -1)
+        .batch(batch_size, drop_remainder=True)
+        .prefetch(tf.data.AUTOTUNE)
+    )
+    test_ds = (
+        tf.data.Dataset.from_tensor_slices((test_files, test_labels))
+        .map(process_image, num_parallel_calls=tf.data.AUTOTUNE)
+        .filter(lambda img, lbl: lbl > -1)
+        .batch(batch_size, drop_remainder=True)
+        .prefetch(tf.data.AUTOTUNE)
+    )
 
     # Debug: Print batch shapes as they are yielded
     def print_batch_shape(images, labels, split_name):

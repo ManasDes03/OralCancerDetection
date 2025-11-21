@@ -1,0 +1,40 @@
+
+======================================================================
+OPTIMIZED 3-CLASS BALANCED (1:1:1) - MOBILENETV2
+======================================================================
+
+Dataset:
+  Total balanced: 387
+  Train: 265 | Val: 64 | Test: 58
+
+Optimizations:
+  - tf.data pipeline with GPU augmentation
+  - Mixed precision (float16/float32)
+  - Batch size: 32 (increased from 16)
+  - Prefetching and caching enabled
+  - XLA compilation
+
+Test Accuracy: 0.4138
+Test Loss: 2.5660
+
+Per-Class Accuracy:
+  OCA: 66.67%
+  Healthy: 15.00%
+  Mutations: 45.00%
+
+Classification Report:
+                         precision    recall  f1-score   support
+
+           OCA (Cancer)       0.44      0.67      0.53        18
+                Healthy       0.75      0.15      0.25        20
+Mutations (OPMD+Benign)       0.33      0.45      0.38        20
+
+               accuracy                           0.41        58
+              macro avg       0.51      0.42      0.39        58
+           weighted avg       0.51      0.41      0.38        58
+
+
+Confusion Matrix:
+[[12  1  5]
+ [ 4  3 13]
+ [11  0  9]]

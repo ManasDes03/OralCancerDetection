@@ -1,0 +1,51 @@
+
+======================================================================
+OPTIMIZED MOBILENETV2 - 1:2:2 CLASS RATIO (ALL OCA, DOUBLE OTHERS)
+======================================================================
+
+OCA images: 129
+Healthy sampled: 258 (target ~258)
+Mutations sampled: 258 (target ~258)
+TOTAL: 645
+
+Split:
+  Train: 457
+  Val:   89
+  Test:  99
+
+Optimizations:
+  - tf.data pipeline with GPU augmentation
+  - Mixed precision (float16/float32)
+  - Batch size: 32 (increased from 16)
+  - Prefetching and caching enabled
+  - XLA compilation
+
+Class Weights:
+  OCA: 1.621
+  Healthy: 0.793
+  Mutations: 0.891
+
+Test Accuracy: 0.5657
+Test Loss: 0.1411
+
+Per-Class Accuracy:
+  OCA: 30.00%
+  Healthy: 41.38%
+  Mutations: 76.00%
+
+Confusion Matrix:
+[[ 6  0 14]
+ [ 1 12 16]
+ [ 6  6 38]]
+
+Classification Report:
+                         precision    recall  f1-score   support
+
+           OCA (Cancer)       0.46      0.30      0.36        20
+                Healthy       0.67      0.41      0.51        29
+Mutations (OPMD+Benign)       0.56      0.76      0.64        50
+
+               accuracy                           0.57        99
+              macro avg       0.56      0.49      0.51        99
+           weighted avg       0.57      0.57      0.55        99
+

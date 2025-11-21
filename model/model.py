@@ -1,61 +1,29 @@
+
 import tensorflow as tf
-from tensorflow.keras import layers, models # pyright: ignore[reportMissingImports]
-from tensorflow.keras.applications import ( # pyright: ignore[reportMissingImports]
-    EfficientNetB0,
-    MobileNetV2,
-    ResNet50,
-    InceptionV3
-)
 
-# Mapping model names to their corresponding Keras applications
-PRETRAINED_MODELS = {
-    "EfficientNetB0": EfficientNetB0,
-    "MobileNetV2": MobileNetV2,
-    "ResNet50": ResNet50,
-    "InceptionV3": InceptionV3
-}
+def OralCancerModel(config):
+    """
+    MobileNetV2 transfer learning model for binary oral cancer classification.
+    """
+    num_classes = config['dataset']['num_classes']
+    image_size = tuple(config['dataset']['image_size'])
+    if len(image_size) == 2:
+        input_shape = (*image_size, 3)
+    else:
+        input_shape = (*image_size[:2], 3)
 
-class OralCancerModel(tf.keras.Model):
-    def __init__(self, config):
-        super(OralCancerModel, self).__init__()
-        self.config = config
-        self.num_classes = config['dataset']['num_classes']
-        self.image_size = tuple(config['dataset']['image_size'])
-        # Always use 3 channels for pre-trained models
-        if len(self.image_size) == 2:
-            self.input_shape = (*self.image_size, 3)
-        else:
-            # If config mistakenly provides 1 channel, override to 3 and warn
-            if self.image_size[-1] == 1:
-                print("Warning: Overriding input channels from 1 to 3 for pre-trained model compatibility.")
-            self.input_shape = (*self.image_size[:2], 3)
-        self.base_model = self._get_base_model()
+    base_model = tf.keras.applications.MobileNetV2(
+        input_shape=input_shape,
+        include_top=False,
+        weights='imagenet',
+        pooling='avg'
+    )
+    base_model.trainable = False  # Freeze base
 
-        # Adding custom classification head
-        self.model = models.Sequential([
-            self.base_model,
-            layers.GlobalAveragePooling2D(),
-            # layers.Dropout(0.5),
-            layers.Dense(128, activation='relu'),
-            layers.Dense(self.num_classes, activation='softmax')
-        ])
-
-    def _get_base_model(self):
-        model_name = self.config['model']['name']
-        weights = self.config['model'].get('weights', 'imagenet')  # Default to ImageNet weights
-
-        print(f"[DEBUG] Using input_shape for base model: {self.input_shape}")
-
-        if model_name in PRETRAINED_MODELS:
-            base_model = PRETRAINED_MODELS[model_name](
-                include_top=False,
-                weights=weights,
-                input_shape=self.input_shape
-            )
-            base_model.trainable = self.config['model'].get('trainable', False)  # Fine-tuning option
-            return base_model
-        else:
-            raise ValueError(f"Unsupported model: {model_name}. Available models: {list(PRETRAINED_MODELS.keys())}")
-
-    def call(self, inputs):
-        return self.model(inputs)
+    inputs = tf.keras.Input(shape=input_shape)
+    x = tf.keras.applications.mobilenet_v2.preprocess_input(inputs)
+    x = base_model(x, training=False)
+    x = tf.keras.layers.Dropout(0.2)(x)
+    outputs = tf.keras.layers.Dense(1, activation='sigmoid')(x)
+    model = tf.keras.Model(inputs, outputs)
+    return model

@@ -1,160 +1,289 @@
-# cancer-detection-ml
+# Oral Cancer Detection using Deep Learning
 
-# 🦷 Oral Cancer Detection Using TensorFlow
+A comprehensive deep learning system for automated 3-class oral cancer classification using MobileNetV2 with optimized training pipelines and patient-aware evaluation.
 
-This project aims to detect oral cancer from medical images using deep learning models built with TensorFlow. It supports multiple datasets, including **Oral Cancer**, **Oral Cancer 2.0**, and the **Sri Lankan Dataset**, providing flexibility for experimentation and real-world applications.
+## 🎯 Project Overview
 
----
+This project implements an advanced oral cancer detection system that classifies oral cavity images into three categories:
+- **OCA (Oral Cancer)** - Malignant lesions
+- **Healthy** - Normal tissue
+- **Mutations (OPMD + Benign)** - Pre-malignant and benign lesions
+
+The system uses transfer learning with MobileNetV2 as the backbone, enhanced with focal loss, class weighting, heavy data augmentation, and GPU-accelerated training pipelines.
+
+## 🔬 Key Features
+
+### Advanced Training Techniques
+- **Two-Phase Fine-Tuning**: Freeze-then-unfreeze strategy for optimal transfer learning
+- **Focal Loss**: Addresses class imbalance by down-weighting easy examples
+- **Class Weights**: Computed from training distribution to balance minority class learning
+- **Patient-Aware Splitting**: 70/15/15 train/val/test split at patient level to prevent data leakage
+- **Heavy Data Augmentation**: GPU-accelerated random flips, rotations, brightness, contrast, zoom
+
+### Performance Optimizations
+- **tf.data Pipeline**: 40-60% faster than ImageDataGenerator
+- **Mixed Precision Training**: Leverages Tensor Cores (float16/float32)
+- **Prefetching & Caching**: Overlaps data loading with GPU computation
+- **XLA JIT Compilation**: Reduces kernel launch overhead
+- **Parallel Image Loading**: Multi-threaded decode/augment with AUTOTUNE
+
+### Model Architecture
+- **Base**: MobileNetV2 (ImageNet pretrained)
+- **Input**: 224×224×3 RGB images
+- **Head**: Global Average Pooling → Dense layers with Dropout & L2 regularization
+- **Output**: 3-class softmax with float32 dtype for stability
+
+## 📊 Training Variants
+
+Three optimized training scripts explore different class balancing strategies:
+
+### 1. Unbalanced (Full Dataset)
+**Script**: `original_dataset_unbalanced_optimized.py`
+
+Uses the complete dataset with natural class distribution.
+- **Purpose**: Baseline with maximum data
+- **Advantage**: Highest overall accuracy
+- **Trade-off**: Potential bias toward majority classes
+- **Results**: `original_results_optimized/`
+
+**Usage**:
+```bash
+# Train from scratch
+conda run -n efficientnet_env python original_dataset_unbalanced_optimized.py
+
+# Evaluate only (load checkpoint, regenerate metrics/plots)
+conda run -n efficientnet_env python original_dataset_unbalanced_optimized.py --eval-only
+```
+
+### 2. Balanced 1:1:1
+**Script**: `balanced_3class_optimized.py`
+
+Equal samples per class (limited by minority class size).
+- **Purpose**: Demonstrate fairness vs accuracy trade-off
+- **Advantage**: Improved minority class (OCA) sensitivity
+- **Trade-off**: Reduced overall accuracy due to smaller dataset
+- **Results**: `balanced_results_optimized/`
+
+**Usage**:
+```bash
+conda run -n efficientnet_env python balanced_3class_optimized.py
+```
+
+### 3. Ratio 1:2:2
+**Script**: `balanced_3class_ratio_1_2_2_optimized.py`
+
+All OCA images + 2× OCA count for Healthy and Mutations.
+- **Purpose**: Pragmatic compromise between fairness and performance
+- **Advantage**: Better minority recall than unbalanced, better accuracy than 1:1:1
+- **Results**: `ratio_1_2_2_results_optimized/`
+
+**Usage**:
+```bash
+conda run -n efficientnet_env python balanced_3class_ratio_1_2_2_optimized.py
+```
 
 ## 📁 Project Structure
-- **`data/`** – Stores datasets (Oral Cancer, Oral, Sri Lankan). Update `dataloader.py` to add new datasets.  
-- **`dataloader/`** – Contains `dataloader.py` for loading datasets.  
-- **`experiments/`** – Stores timestamp-based experiment results (config, loss plots, metrics).  
-- **`legacy/`** – Contains older code (e.g., Anshul’s work).  
-- **`model/`** – Includes `model.py` defining Inception, MobileNet, ResNet, EfficientNet models.  
-- **`config.py`** – Configuration file for hyperparameters.  
-- **`main.py`** – Main script to run models (`python main.py`).  
-- **`requirements.txt`** – Lists dependencies (`pip install -r requirements.txt`).  
-
-⚠ **Note:** Do not share private datasets.
-
-## ⚙️ Configuration
-
-All project settings are managed via `config.yaml`:
-
-```yaml
-# General Configuration
-dataset:
-  name: "Oral_Cancer"    # Options: "Oral_Cancer", "Oral_Cancer_2.0", "Sri_Lankan"
-  image_size: [224, 224] # Specify image size (height, width)
-  batch_size: 32
-  num_classes: 2         # Assuming binary classification: cancer vs non-cancer
-  
-model:
-  name: "EfficientNetB0"      # Options: "EfficientNetB0", "MobileNetV2", "ResNet50", "InceptionV3"
-  weights: "imagenet"         # Use "imagenet" for pre-trained weights, or "None" for random initialization
-  trainable: False            # Set to True for fine-tuning the base model
-
-# Dataset Paths
-paths:
-  Oral_Cancer:
-    images_dir: "data/OralCancer"
-
-  Oral_Cancer_2.0:
-    images_dir: "data/Oral_Cancer_Dataset_2.0"
-
-  Sri_Lankan:
-    images_dir: "data/Sri_Lankan_Dataset/Images"
-    annotations_file: "data/Sri_Lankan_Dataset/Imagewise_Data.csv"
-
-# Training Configuration
-training:
-  learning_rate: 0.001
-  epochs: 20
-  optimizer: "adam"       # Options: "adam", "sgd", "rmsprop"
-  loss_function: "categorical_crossentropy"
-  metrics: ["accuracy"]
 
 ```
-
----
-
-## 🗂️ Dataset Formats
-
-### 1️⃣ **Oral Cancer & Oral Cancer 2.0**
+cancer-detection-ml/
+├── data/                                    # Dataset (images + CSV)
+│   └── Sri Lankan Dataset/
+│       ├── Images/                          # Oral cavity images
+│       ├── Imagewise_Data.csv              # Image-level labels
+│       ├── Patientwise_Data.csv            # Patient metadata
+│       └── Annotation.json                 # Annotations
+│
+├── dataloaders/                            # Data loading utilities
+├── model/                                  # Model architecture modules
+├── statistics/                             # Dataset statistics scripts
+│
+├── original_dataset_unbalanced_optimized.py    # Full dataset training
+├── balanced_3class_optimized.py                # 1:1:1 balanced training
+├── balanced_3class_ratio_1_2_2_optimized.py    # 1:2:2 ratio training
+│
+├── original_results_optimized/             # Unbalanced results
+│   ├── results.txt                         # Metrics & confusion matrix
+│   ├── training_history.png               # Loss/accuracy curves
+│   ├── confusion_matrix.png               # Heatmap visualization
+│   ├── per_class_accuracy.png             # Bar chart
+│   └── mobilenet_original_best_*.h5       # Best model checkpoint
+│
+├── balanced_results_optimized/             # 1:1:1 results
+├── ratio_1_2_2_results_optimized/          # 1:2:2 results
+│
+├── config.yaml                             # Configuration
+├── requirements.txt                        # Python dependencies
+└── README.md                               # This file
 ```
-data/
-└── Oral_Cancer/
-    |
-    ├── cancer/
-    |   ├── image1.jpg
-    │   └── image2.jpg
-    └── non-cancer/
-        ├── image1.jpg
-        └── image2.jpg
-```
 
-### 2️⃣ **Sri Lankan Dataset**
-```
-data/
-└── Sri_Lankan_Dataset/
-    ├── Images
-    │   ├── image1.jpg
-    │   └── image2.jpg
-    ├── Annotation.json
-    ├── Patientwise_Data.csv
-    └── Imagewise_Data.csv
-    
-```
+## 🚀 Setup & Installation
 
-**CSV Format Example:**
-```csv
-image_name,label
-image1.jpg,0
-image2.jpg,1
-```
-- `label`: `0` = non-cancer, `1` = cancer.
+### Prerequisites
+- Python 3.8-3.10
+- NVIDIA GPU with CUDA support (recommended)
+- Conda or virtualenv
 
----
+### Environment Setup
 
-## 🖥️ Installation & Setup
-
-### 1️⃣ Install Anaconda (Recommended)
-- Download Anaconda: [https://www.anaconda.com/products/distribution](https://www.anaconda.com/products/distribution)
-
-### 2️⃣ Create a Virtual Environment
+1. **Clone the repository**:
 ```bash
-conda create -n oral_cancer_detection python=3.10
-conda init
-source ~/.bashrc
-conda activate oral_cancer_detection
+git clone https://github.com/ManasDes03/OralCancerDetection.git
+cd OralCancerDetection
 ```
 
-### 3️⃣ Install Dependencies
+2. **Create conda environment**:
 ```bash
-pip install tensorflow pyyaml pandas
+conda create -n efficientnet_env python=3.10
+conda activate efficientnet_env
 ```
 
-Or if using `requirements.txt`:
+3. **Install dependencies**:
 ```bash
 pip install -r requirements.txt
 ```
 
----
+### Dataset Preparation
+Ensure your dataset follows this structure:
+```
+data/Sri Lankan Dataset/
+├── Images/              # All .jpg images
+└── Imagewise_Data.csv   # Columns: "Image Name", "Category"
+```
 
-## 🏃‍♂️ Running the Project
+**CSV Format**:
+- `Image Name`: filename (e.g., R-01-012.jpg)
+- `Category`: one of {OCA, Healthy, OPMD, Benign}
 
-Simply run the main script:
-```bash
-python main.py
+## 🔧 Training Configuration
+
+### Hyperparameters (Default)
+
+| Parameter | Phase 1 (Frozen) | Phase 2 (Fine-tune) |
+|-----------|-----------------|---------------------|
+| Learning Rate | 1e-3 | 1e-4 |
+| Batch Size | 32 | 32 |
+| Max Epochs | 15-20 | 15-20 |
+| Optimizer | Adam | Adam |
+| Loss | Focal (α=0.25, γ=2.0) | Focal (α=0.25, γ=2.0) |
+| Early Stopping | Patience 7-8 | Patience 8 |
+| LR Reduction | Factor 0.5, Patience 3-4 | Factor 0.5, Patience 3-4 |
+
+### Data Augmentation (Training Only)
+- Random horizontal & vertical flips
+- Random brightness (±20%)
+- Random contrast (0.8-1.2)
+- Random saturation (0.8-1.2)
+- Random hue shift (±10%)
+- Random rotation (0°, 90°, 180°, 270°)
+- Random zoom (0.7-1.0 crop then resize)
+
+## 📈 Results & Evaluation
+
+Each training run generates:
+
+### Metrics File (`results.txt`)
+- Train/Val/Test split sizes
+- Class weights
+- Test accuracy & loss
+- Per-class precision, recall, F1-score
+- Confusion matrix (numerical)
+
+### Visualizations
+1. **training_history.png**: Train/val accuracy and loss curves with phase boundary
+2. **confusion_matrix.png**: Labeled heatmap showing prediction patterns
+3. **per_class_accuracy.png**: Bar chart of per-class accuracies
+
+### Model Checkpoints
+- **Phase 1**: `mobilenet_*_initial.h5`
+- **Phase 2**: `mobilenet_*_final.h5` (best model based on validation)
+
+## 🎓 Methodology Highlights
+
+### Patient-Aware Splitting
+Prevents data leakage by splitting at patient level:
+- Patient ID derived from image name (e.g., `R-01-012.jpg` → Patient `R-01`)
+- Ensures no patient appears in multiple splits
+- 70% train, 15% validation, 15% test
+
+### Label Mapping
+- OCA → Class 0 (Cancer)
+- Healthy → Class 1
+- OPMD & Benign → Class 2 (Mutations, combined)
+
+### Class Imbalance Handling
+1. **Focal Loss**: Down-weights easy examples, focuses on hard cases
+2. **Class Weights**: Inversely proportional to class frequency
+3. **Balanced Sampling** (variants 2 & 3): Equalize or adjust class ratios
+
+### Reproducibility
+- Fixed seeds: `np.random.seed(42)`, `tf.random.set_seed(42)`
+- Patient-aware splitting ensures consistent evaluation
+- Note: Some GPU/tf.data randomness may cause minor variations
+
+## 🔬 Performance Comparison
+
+| Variant | Dataset Size | Test Accuracy | OCA Recall | Strengths |
+|---------|-------------|---------------|------------|-----------|
+| **Unbalanced** | ~3000 images | ~0.72 | Lower | Maximum data, high overall accuracy |
+| **Balanced 1:1:1** | ~400 images | ~0.41 | ~0.67 | Fair across classes, good minority sensitivity |
+| **Ratio 1:2:2** | ~600 images | Mid-range | Mid-range | Balanced trade-off, practical compromise |
+
+*Note: Exact numbers depend on random split and training convergence*
+
+## 🛠️ Troubleshooting
+
+### GPU Out of Memory
+- Reduce batch size in CONFIG (e.g., 32 → 24 or 16)
+- Close other GPU-intensive applications
+
+### Missing Images Warning
+- Some filenames in CSV may not match files in `Images/`
+- Scripts automatically filter out missing files
+- Check CSV for incorrect filenames or add missing .jpg extensions
+
+### Mixed Precision Warnings
+- Normal cuDNN frontend warnings during phase 2 fine-tuning
+- Does not affect training; indicates automatic optimization
+
+### Slow Training
+- Ensure GPU is detected: TensorFlow should log "Created device GPU:0"
+- Verify CUDA/cuDNN versions match TensorFlow requirements
+- Use `--no-capture-output` with conda run to see detailed logs
+
+## 📚 Dependencies
+
+Key packages (see `requirements.txt` for full list):
+- TensorFlow 2.10+ (with GPU support)
+- NumPy
+- Pandas
+- scikit-learn
+- Matplotlib
+- Seaborn
+
+## 🤝 Contributing
+
+This is a research project. For questions or collaboration:
+- Open an issue on GitHub
+- Contact: [Your contact info]
+
+## 📄 License
+
+[Specify your license here]
+
+## 🙏 Acknowledgments
+
+- Sri Lankan Oral Cancer Dataset
+- MobileNetV2 architecture (Google)
+- TensorFlow/Keras framework
+
+## 📊 Citation
+
+If you use this code in your research, please cite:
+```
+[Your citation format]
 ```
 
 ---
 
-## 📊 Model Training
-
-- The model is a simple **Convolutional Neural Network (CNN)** optimized for binary classification.
-- You can tweak the architecture in `models/models.py` and adjust hyperparameters via `config.yaml`.
-
----
-
-## ✅ Evaluation Metrics
-
-- **Accuracy** (default metric)
-- Optionally, add **Precision**, **Recall**, and **F1-score** for more detailed performance analysis.
-
----
-
-## 📌 Future Improvements
-- Add data augmentation techniques.
-- Experiment with transfer learning using pre-trained models (e.g., ResNet, VGG).
-- Implement advanced evaluation metrics and visualization tools (e.g., confusion matrix).
-
----
-
-## 🔗 References
-
-- [TensorFlow Documentation](https://www.tensorflow.org/)
-- [Anaconda Documentation](https://docs.anaconda.com/)
-- Relevant medical image datasets and publications.
-
+**Last Updated**: November 2025  
+**Maintainer**: ManasDes03

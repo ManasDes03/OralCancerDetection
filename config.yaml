@@ -3,7 +3,7 @@ dataset:
   name: "Sri_Lankan"    # Options: "Oral_Cancer", "Oral_Cancer_2.0", "Sri_Lankan"
   image_size: [224, 224] # Specify image size (height, width)
   batch_size: 8
-  num_classes: 4         # OPMD, Benign, Healthy, OCA (update if more classes)
+  num_classes: 2         # 0: non-cancer, 1: cancer
   
 model:
   name: "MobileNetV2"      # Options: "EfficientNetB0", "MobileNetV2", "ResNet50", "InceptionV3"
@@ -13,8 +13,8 @@ model:
 # Dataset Paths
 paths:
   Sri_Lankan:
-    images_dir: "data/Sri_Lankan_Dataset/Images"
-    annotations_file: "data/Sri_Lankan_Dataset/Imagewise_Data (2).csv"
+    images_dir: "data/Sri Lankan Dataset/Images"
+    annotations_file: "data/Sri Lankan Dataset/Imagewise_Data.csv"
 
 
 # Training Configuration
@@ -24,3 +24,26 @@ training:
   optimizer: "adam"       # Options: "adam", "sgd", "rmsprop"
   loss_function: "sparse_categorical_crossentropy"
   metrics: ["sparse_categorical_accuracy"]
+
+  # Optimizer hyperparameters
+  optimizer_params:
+    adam:
+      beta_1: 0.9
+      beta_2: 0.999
+      epsilon: 1e-7
+    sgd:
+      momentum: 0.9
+      nesterov: true
+    rmsprop:
+      rho: 0.9
+      momentum: 0.0
+      epsilon: 1e-7
+
+  # Learning rate scheduler
+  lr_scheduler:
+    type: "ReduceLROnPlateau"  # Options: "ReduceLROnPlateau", "None"
+    monitor: "val_loss"
+    factor: 0.5
+    patience: 3
+    min_lr: 1e-6
+    verbose: 1

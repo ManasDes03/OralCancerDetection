@@ -1,0 +1,36 @@
+
+======================================================================
+OPTIMIZED ORIGINAL DATASET (UNBALANCED) - ADVANCED TRAINING
+======================================================================
+
+Train/Val/Test sizes: 2116/438/441
+Class weights: {2: 0.45830625947585013, 1: 1.405046480743692, 0: 9.404444444444444}
+
+Optimizations Applied:
+- tf.data pipeline with GPU-accelerated augmentation
+- Mixed precision training (float16/float32)
+- Prefetching and caching
+- XLA compilation enabled
+
+Phase 1 epochs: 20 (frozen backbone)
+Phase 2 epochs: 20 (fine-tuning)
+
+Test Metrics:
+{'loss': 0.07314343005418777, 'accuracy': 0.7210884690284729}
+
+Classification Report:
+              precision    recall  f1-score   support
+
+         OCA     0.0000    0.0000    0.0000        25
+     Healthy     0.0000    0.0000    0.0000        98
+   Mutations     0.7211    1.0000    0.8379       318
+
+    accuracy                         0.7211       441
+   macro avg     0.2404    0.3333    0.2793       441
+weighted avg     0.5200    0.7211    0.6042       441
+
+
+Confusion Matrix:
+[[  0   0  25]
+ [  0   0  98]
+ [  0   0 318]]
