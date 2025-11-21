@@ -246,9 +246,87 @@ Key packages (see `requirements.txt` for full list):
 
 ## 🤝 Contributing
 
-This is a research project. For questions or collaboration:
-- Open an issue on GitHub
-- Contact: f20220728@goa.bits-pilani.ac.in
+We welcome contributions to improve this project! Here's how you can contribute:
+
+### For External Contributors (Fork Method)
+
+1. **Fork the repository**
+   ```bash
+   # Click "Fork" button on GitHub
+   # Then clone your fork
+   git clone https://github.com/YOUR_USERNAME/OralCancerDetection.git
+   cd OralCancerDetection
+   ```
+
+2. **Create a feature branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   # Examples: feature/new-augmentation, fix/memory-leak, docs/update-readme
+   ```
+
+3. **Make your changes**
+   - Follow existing code style
+   - Add comments for complex logic
+   - Update documentation if needed
+   - Test your changes thoroughly
+
+4. **Commit and push**
+   ```bash
+   git add .
+   git commit -m "Add: brief description of your changes"
+   git push origin feature/your-feature-name
+   ```
+
+5. **Create Pull Request**
+   - Go to your fork on GitHub
+   - Click "Pull Request" → "New Pull Request"
+   - Describe your changes clearly
+   - Wait for review
+
+### For Team Members (Branch Method)
+
+1. **Clone and setup**
+   ```bash
+   git clone https://github.com/ManasDes03/OralCancerDetection.git
+   cd OralCancerDetection
+   git checkout -b feature/your-feature-name
+   ```
+
+2. **Keep your branch updated**
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout feature/your-feature-name
+   git merge main
+   ```
+
+3. **Push and create PR**
+   ```bash
+   git push origin feature/your-feature-name
+   # Create Pull Request on GitHub for review before merging to main
+   ```
+
+### Contribution Guidelines
+
+- **Code Quality**: Ensure code is clean, well-commented, and follows Python best practices
+- **Testing**: Test your changes with at least one training variant
+- **Documentation**: Update README.md or SETUP_GUIDE.md if you add new features
+- **Commits**: Use clear commit messages (e.g., "Fix: GPU memory overflow in batch loading")
+- **Issues**: Check existing issues before creating new ones
+
+### Areas for Contribution
+
+- 🔬 New model architectures (EfficientNet, ResNet, Vision Transformers)
+- 📊 Additional evaluation metrics or visualization improvements
+- 🚀 Performance optimizations
+- 🐛 Bug fixes and error handling
+- 📝 Documentation improvements
+- 🧪 Unit tests and validation scripts
+
+### Questions or Collaboration?
+
+- **Open an issue** on GitHub for bugs or feature requests
+- **Contact**: f20220728@goa.bits-pilani.ac.in
 
 ## 📄 License
 
