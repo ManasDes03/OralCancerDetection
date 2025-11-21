@@ -116,43 +116,27 @@ cancer-detection-ml/
 └── README.md                               # This file
 ```
 
-## 🚀 Setup & Installation
+## 🚀 Quick Start
 
-### Prerequisites
-- Python 3.8-3.10
-- NVIDIA GPU with CUDA support (recommended)
-- Conda or virtualenv
+📖 **For detailed setup instructions, see [SETUP_GUIDE.md](SETUP_GUIDE.md)**
 
-### Environment Setup
+### Basic Installation
 
-1. **Clone the repository**:
 ```bash
+# Clone repository
 git clone https://github.com/ManasDes03/OralCancerDetection.git
 cd OralCancerDetection
-```
 
-2. **Create conda environment**:
-```bash
+# Create environment and install dependencies
 conda create -n efficientnet_env python=3.10
 conda activate efficientnet_env
-```
-
-3. **Install dependencies**:
-```bash
 pip install -r requirements.txt
+
+# Run training
+conda run -n efficientnet_env python original_dataset_unbalanced_optimized.py
 ```
 
-### Dataset Preparation
-Ensure your dataset follows this structure:
-```
-data/Sri Lankan Dataset/
-├── Images/              # All .jpg images
-└── Imagewise_Data.csv   # Columns: "Image Name", "Category"
-```
-
-**CSV Format**:
-- `Image Name`: filename (e.g., R-01-012.jpg)
-- `Category`: one of {OCA, Healthy, OPMD, Benign}
+For complete setup including GPU configuration, troubleshooting, and verification steps, refer to **[SETUP_GUIDE.md](SETUP_GUIDE.md)**
 
 ## 🔧 Training Configuration
 
@@ -264,26 +248,34 @@ Key packages (see `requirements.txt` for full list):
 
 This is a research project. For questions or collaboration:
 - Open an issue on GitHub
-- Contact: [Your contact info]
+- Contact: f20220728@goa.bits-pilani.ac.in
 
 ## 📄 License
 
-[Specify your license here]
+All Rights Reserved
 
 ## 🙏 Acknowledgments
 
 - Sri Lankan Oral Cancer Dataset
 - MobileNetV2 architecture (Google)
 - TensorFlow/Keras framework
+- Research conducted at BITS Pilani, K K Birla Goa Campus
 
 ## 📊 Citation
 
 If you use this code in your research, please cite:
 ```
-[Your citation format]
+@misc{oralcancer2025,
+  author = {ManasDes03},
+  title = {Oral Cancer Detection using Deep Learning with Optimized Training Pipelines},
+  year = {2025},
+  publisher = {GitHub},
+  url = {https://github.com/ManasDes03/OralCancerDetection}
+}
 ```
 
 ---
 
 **Last Updated**: November 2025  
-**Maintainer**: ManasDes03
+**Maintainer**: ManasDes03  
+**Repository**: [https://github.com/ManasDes03/OralCancerDetection](https://github.com/ManasDes03/OralCancerDetection)
