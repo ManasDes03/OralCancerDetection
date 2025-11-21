@@ -1,7 +1,40 @@
-*.Identifier
-*.png
-data/*
-*.jpg
-*.json
-*.csv
-*.jpeg
+# Ignore dataset (do not upload raw data)
+data/
+
+# Python cache and build
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+build/
+dist/
+
+# Virtual environments
+venv/
+env/
+ENV/
+cancer_env/
+efficientnet_env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE/editor
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and temp
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+
+# Optional: large model files (uncomment to exclude checkpoints)
+# *.h5
+# *.tflite

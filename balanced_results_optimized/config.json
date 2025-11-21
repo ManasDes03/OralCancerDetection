@@ -1,0 +1,12 @@
+{
+  "img_height": 224,
+  "img_width": 224,
+  "batch_size": 32,
+  "initial_lr": 0.001,
+  "fine_tune_lr": 0.0001,
+  "initial_epochs": 15,
+  "fine_tune_epochs": 15,
+  "fine_tune_at": 100,
+  "focal_loss_alpha": 0.25,
+  "focal_loss_gamma": 2.0
+}
