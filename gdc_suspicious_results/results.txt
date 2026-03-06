@@ -1,0 +1,22 @@
+GDC SUSPICIOUS vs NON-SUSPICIOUS CLASSIFICATION
+======================================================================
+
+Test Accuracy: 0.3521
+ROC-AUC: 0.6068
+
+PR-AUC: 0.4383
+
+Classification Report:
+                precision    recall  f1-score   support
+
+Non-suspicious     0.7955    0.1039    0.1837       337
+    Suspicious     0.3073    0.9371    0.4629       143
+
+      accuracy                         0.3521       480
+     macro avg     0.5514    0.5205    0.3233       480
+  weighted avg     0.6500    0.3521    0.2669       480
+
+
+Confusion Matrix:
+[[ 35 302]
+ [  9 134]]

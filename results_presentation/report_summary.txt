@@ -1,0 +1,36 @@
+GDC ORAL CANCER — TWO-STAGE CLASSIFIER RESULTS
+=================================================================
+Architecture  : EfficientNetB0, two-phase training (frozen → fine-tune)
+Input         : 224×224 RGB  |  EfficientNet preprocessing
+TTA           : horizontal flip averaging
+Threshold     : F2-score maximisation (recall-biased), capped at 0.45
+Training      : Focal loss  |  balanced batch interleaving  |  heavy minority augment
+
+STAGE 1 — SUSPICIOUS vs NON-SUSPICIOUS
+─────────────────────────────────────────────────────────────────
+  Test ROC-AUC         : 0.6068
+  Test PR-AUC          : 0.4383
+  Classification threshold : 0.050
+  Suspicious  Recall   : 0.9371
+  Suspicious  Precision: 0.3073
+  Suspicious  F1       : 0.4629
+  Test Accuracy        : 0.3521
+  Confusion Matrix:
+[[ 35 302]
+ [  9 134]]
+
+STAGE 2 — HIGH-RISK vs LOW-RISK
+─────────────────────────────────────────────────────────────────
+  Test ROC-AUC         : 0.7503
+  Test PR-AUC          : 0.1375
+  Classification threshold : 0.450
+  High-risk  Recall    : 1.0000
+  High-risk  Precision : 0.0642
+  High-risk  F1        : 0.1206
+  Test Accuracy        : 0.3647
+  Confusion Matrix:
+[[140 277]
+ [  0  19]]
+
+=================================================================
+Charts saved to: results_presentation/

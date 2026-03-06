@@ -35,6 +35,14 @@ desktop.ini
 *.swp
 *~
 
-# Optional: large model files (uncomment to exclude checkpoints)
+# TFLite exports (large binary)
+*.tflite
+
+# Keep .h5 model weights tracked (17 MB each, within GitHub limits)
 # *.h5
-# *.tflite
+
+# Saved models directories from older experiments
+saved_models/
+original_results_optimized/
+balanced_results_optimized/
+ratio_1_2_2_results_optimized/
