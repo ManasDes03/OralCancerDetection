@@ -11,6 +11,36 @@ This project implements an advanced oral cancer detection system that classifies
 
 The system uses transfer learning with MobileNetV2 as the backbone, enhanced with focal loss, class weighting, heavy data augmentation, and GPU-accelerated training pipelines.
 
+## 🧭 Experiment Branches (Organized Workstreams)
+
+To keep research routes isolated and reproducible, major approaches are maintained in dedicated branches:
+
+- `main`:
+   - Stable baseline code and documentation
+
+- `exp/negative-testing-route`:
+   - Positive/negative test route
+   - Ensemble fusion + calibration + significance scripts
+
+- `exp/ratio-1-1-route`:
+   - Strict 1:1 sampling experiments (all positives + equal negatives)
+   - Base-vs-ratio comparison utility
+
+Recommended workflow:
+
+1. Create a branch per hypothesis/approach.
+2. Commit scripts and lightweight summaries (`results.json`, `results.txt`).
+3. Do not commit large checkpoints or generated images unless explicitly needed.
+4. Open PRs from experiment branches for review and final merge decisions.
+
+Quick branch commands:
+
+```bash
+git fetch origin
+git switch exp/negative-testing-route
+git switch exp/ratio-1-1-route
+```
+
 ## 🔬 Key Features
 
 ### Advanced Training Techniques
@@ -137,6 +167,16 @@ conda run -n efficientnet_env python original_dataset_unbalanced_optimized.py
 ```
 
 For complete setup including GPU configuration, troubleshooting, and verification steps, refer to **[SETUP_GUIDE.md](SETUP_GUIDE.md)**
+
+### Use GPU-Enabled Environment
+
+If training is slow, confirm you are running in the intended GPU environment:
+
+```bash
+conda run -n efficientnet_env --no-capture-output python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+```
+
+If this prints an empty list, the current environment is CPU-only.
 
 ## 🔧 Training Configuration
 

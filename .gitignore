@@ -36,5 +36,23 @@ desktop.ini
 *~
 
 # Optional: large model files (uncomment to exclude checkpoints)
-# *.h5
-# *.tflite
+*.h5
+*.weights.h5
+*.keras
+*.tflite
+
+# Training/evaluation generated artifacts (keep lightweight summaries like .json/.txt)
+*.png
+test_predictions_cache.csv
+
+# Common experiment output folders (large, frequently regenerated)
+gdc_suspicious_results/
+gdc_suspicious_results_negative/
+gdc_suspicious_results_ensemble/
+gdc_suspicious_results_ratio_1_1/
+gdc_risk_results/
+gdc_risk_results_negative/
+gdc_risk_results_ratio_1_1/
+
+# Keep selected report files if explicitly added with force-add
+# Example: git add -f gdc_suspicious_results_ratio_1_1/results.json
