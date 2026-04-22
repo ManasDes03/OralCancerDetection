@@ -1,0 +1,20 @@
+OOF Stacking Optimization Summary
+========================================
+
+Target recall: 0.93
+
+Baseline (positive isotonic):
+  recall=0.8601, specificity=0.1780, fp=277, f1=0.4530
+OOF stacked ensemble:
+  recall=0.8462, specificity=0.2552, fp=251, f1=0.4699
+
+Delta:
+  fp_reduction_percent=+9.39%
+  recall_change_percent=-1.63%
+  specificity_delta=+0.0772
+  f1_delta=+0.0169
+
+Significance:
+  McNemar p-value=0.049505 (b=56, c=32)
+  Recall diff 95% CI=(-0.08391608391608385, 0.061072596977722354)
+  FP diff 95% CI=(-41.0, -11.0)

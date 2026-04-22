@@ -1,0 +1,24 @@
+GDC NON-SUSPICIOUS DETECTOR (NEGATIVE TEST)
+======================================================================
+
+Labels are FLIPPED: predicting Non-suspicious (1) vs Suspicious (0)
+
+Test Accuracy: 0.7127
+ROC-AUC: 0.5904
+
+PR-AUC: 0.7502
+
+Classification Report:
+                precision    recall  f1-score   support
+
+    Suspicious     0.6296    0.1250    0.2086       136
+Non-suspicious     0.7180    0.9681    0.8245       313
+
+      accuracy                         0.7127       449
+     macro avg     0.6738    0.5465    0.5165       449
+  weighted avg     0.6912    0.7127    0.6379       449
+
+
+Confusion Matrix:
+[[ 17 119]
+ [ 10 303]]

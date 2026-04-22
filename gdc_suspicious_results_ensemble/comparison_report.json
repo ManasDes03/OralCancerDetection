@@ -1,0 +1,95 @@
+{
+  "test_set_size": 480,
+  "suspicious_count": 143,
+  "non_suspicious_count": 337,
+  "models": {
+    "positive": {
+      "model": "Positive Model",
+      "accuracy": 0.3020833333333333,
+      "auc": 0.5739038409661554,
+      "pr_auc": 0.39911548809543546,
+      "precision": 0.2974683544303797,
+      "recall": 0.986013986013986,
+      "f1": 0.4570502431118314,
+      "sensitivity": 0.986013986013986,
+      "specificity": 0.011869436201780416,
+      "tn": 4.0,
+      "fp": 333.0,
+      "fn": 2.0,
+      "tp": 141.0
+    },
+    "negative": {
+      "model": "Negative Model",
+      "accuracy": 0.2875,
+      "auc": 0.3431761117221058,
+      "pr_auc": 0.2256282295229801,
+      "precision": 0.28227571115973743,
+      "recall": 0.9020979020979021,
+      "f1": 0.43000000000000005,
+      "sensitivity": 0.9020979020979021,
+      "specificity": 0.026706231454005934,
+      "tn": 9.0,
+      "fp": 328.0,
+      "fn": 14.0,
+      "tp": 129.0
+    },
+    "ensemble": {
+      "model": "Ensemble",
+      "accuracy": 0.5729166666666666,
+      "auc": 0.6225643792409371,
+      "pr_auc": 0.4740933376987163,
+      "precision": 0.36637931034482757,
+      "recall": 0.5944055944055944,
+      "f1": 0.4533333333333333,
+      "sensitivity": 0.5944055944055944,
+      "specificity": 0.5637982195845698,
+      "tn": 190.0,
+      "fp": 147.0,
+      "fn": 58.0,
+      "tp": 85.0
+    },
+    "tuned_hybrid_ensemble": {
+      "model": "Tuned Hybrid Ensemble",
+      "accuracy": 0.37916666666666665,
+      "auc": 0.580087568218132,
+      "pr_auc": 0.4197325729135089,
+      "precision": 0.31234866828087166,
+      "recall": 0.9020979020979021,
+      "f1": 0.46402877697841727,
+      "sensitivity": 0.9020979020979021,
+      "specificity": 0.1572700296735905,
+      "tn": 53.0,
+      "fp": 284.0,
+      "fn": 14.0,
+      "tp": 129.0
+    }
+  },
+  "false_positive_analysis": {
+    "positive_model_fp": 333.0,
+    "negative_model_fp": 328.0,
+    "ensemble_fp": 147.0,
+    "tuned_hybrid_fp": 284.0,
+    "fp_reduction_negative_vs_positive": 1.501501501501501,
+    "fp_reduction_ensemble_vs_positive": 55.855855855855864,
+    "fp_reduction_tuned_vs_positive": 14.714714714714717
+  },
+  "recall_analysis": {
+    "positive_model_recall": 0.986013986013986,
+    "negative_model_recall": 0.9020979020979021,
+    "ensemble_recall": 0.5944055944055944,
+    "tuned_hybrid_recall": 0.9020979020979021,
+    "recall_change_ensemble_vs_positive_percent": -39.71631205673759,
+    "recall_change_tuned_vs_positive_percent": -8.510638297872346
+  },
+  "tuned_hybrid_operating_point": {
+    "w": 0.8,
+    "threshold": 0.20999999999999996,
+    "recall": 0.9020979020979021,
+    "specificity": 0.1572700296735905,
+    "accuracy": 0.37916666666666665,
+    "tn": 53,
+    "fp": 284,
+    "fn": 14,
+    "tp": 129
+  }
+}

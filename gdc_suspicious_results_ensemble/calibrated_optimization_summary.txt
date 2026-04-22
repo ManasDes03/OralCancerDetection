@@ -1,0 +1,22 @@
+Calibrated Ensemble Optimization Summary
+============================================
+
+Winner: avg_isotonic
+Threshold: 0.250
+Recall target: 0.93
+
+Baseline:
+  recall=0.8531, specificity=0.1958, fp=271, f1=0.4552
+Optimized:
+  recall=0.8322, specificity=0.2878, fp=240, f1=0.4741
+
+Delta:
+  fp_reduction_percent=+11.44%
+  recall_change_percent=-2.46%
+  specificity_delta=+0.0920
+  f1_delta=+0.0189
+
+Significance:
+  McNemar p-value=0.010501 (b=54, c=26)
+  Recall diff 95% CI=(-0.08333333333333337, 0.041673951048950976)
+  FP diff 95% CI=(-46.0, -16.0)

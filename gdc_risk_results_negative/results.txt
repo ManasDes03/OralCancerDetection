@@ -1,0 +1,24 @@
+GDC LOW-RISK DETECTOR (NEGATIVE TEST FOR STAGE 2)
+======================================================================
+
+Labels are FLIPPED: predicting Low-risk (1) vs High-risk (0)
+
+Test Accuracy: 0.9190
+ROC-AUC: 0.8592
+
+PR-AUC: 0.9939
+
+Classification Report:
+              precision    recall  f1-score   support
+
+   High-risk     0.1714    0.4286    0.2449        14
+    Low-risk     0.9810    0.9345    0.9572       443
+
+    accuracy                         0.9190       457
+   macro avg     0.5762    0.6816    0.6011       457
+weighted avg     0.9562    0.9190    0.9354       457
+
+
+Confusion Matrix:
+[[  6   8]
+ [ 29 414]]

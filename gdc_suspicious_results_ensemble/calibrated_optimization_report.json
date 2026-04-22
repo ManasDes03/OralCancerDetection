@@ -1,0 +1,104 @@
+{
+  "checkpoints": {
+    "positive_used": "gdc_suspicious_results/best_phase1_weights.h5",
+    "negative_used": "gdc_suspicious_results_negative/best_phase1_weights.h5"
+  },
+  "target_recall_constraint": 0.93,
+  "validation_tuned_candidates": {
+    "raw_positive": {
+      "threshold": 0.2,
+      "recall": 0.9315068493150684,
+      "specificity": 0.196875,
+      "accuracy": 0.4270386266094421,
+      "fp": 257
+    },
+    "avg_raw": {
+      "threshold": 0.46,
+      "recall": 0.9452054794520548,
+      "specificity": 0.296875,
+      "accuracy": 0.5,
+      "fp": 225
+    },
+    "avg_platt": {
+      "threshold": 0.42000000000000004,
+      "recall": 0.958904109589041,
+      "specificity": 0.271875,
+      "accuracy": 0.4871244635193133,
+      "fp": 233
+    },
+    "avg_isotonic": {
+      "threshold": 0.25,
+      "recall": 0.9315068493150684,
+      "specificity": 0.346875,
+      "accuracy": 0.5300429184549357,
+      "fp": 209
+    },
+    "contra_platt": {
+      "threshold": 0.39,
+      "recall": 0.9315068493150684,
+      "specificity": 0.30625,
+      "accuracy": 0.5021459227467812,
+      "fp": 222
+    },
+    "stacked_calibrated": {
+      "threshold": 0.34,
+      "recall": 0.9383561643835616,
+      "specificity": 0.34375,
+      "accuracy": 0.5300429184549357,
+      "fp": 210
+    }
+  },
+  "winner": "avg_isotonic",
+  "winner_threshold": 0.25,
+  "test_metrics": {
+    "baseline": {
+      "name": "positive_baseline",
+      "threshold": 0.2,
+      "auc": 0.5739038409661554,
+      "pr_auc": 0.39911548809543546,
+      "accuracy": 0.39166666666666666,
+      "precision": 0.3104325699745547,
+      "recall": 0.8531468531468531,
+      "specificity": 0.19584569732937684,
+      "f1": 0.4552238805970149,
+      "tn": 66,
+      "fp": 271,
+      "fn": 21,
+      "tp": 122
+    },
+    "optimized": {
+      "name": "avg_isotonic",
+      "threshold": 0.25,
+      "auc": 0.64875184163018,
+      "pr_auc": 0.4744263666984681,
+      "accuracy": 0.45,
+      "precision": 0.33147632311977715,
+      "recall": 0.8321678321678322,
+      "specificity": 0.2878338278931751,
+      "f1": 0.47410358565737054,
+      "tn": 97,
+      "fp": 240,
+      "fn": 24,
+      "tp": 119
+    }
+  },
+  "improvement": {
+    "fp_reduction_percent": 11.439114391143912,
+    "recall_change_percent": -2.4590163934426177,
+    "specificity_delta": 0.09198813056379823,
+    "f1_delta": 0.018879705060355634
+  },
+  "significance": {
+    "mcnemar_pvalue": 0.010501365317854552,
+    "mcnemar_b": 54,
+    "mcnemar_c": 26,
+    "recall_diff_95ci": [
+      -0.08333333333333337,
+      0.041673951048950976
+    ],
+    "fp_diff_95ci": [
+      -46.0,
+      -16.0
+    ]
+  }
+}

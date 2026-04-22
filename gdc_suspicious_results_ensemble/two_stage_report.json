@@ -1,0 +1,40 @@
+{
+  "method": "two_stage_pipeline",
+  "parameters": {
+    "stage1_negative_threshold": 0.8,
+    "stage2_positive_threshold": 0.5
+  },
+  "test_set_size": 1996,
+  "baseline_metrics": {
+    "TP": 276,
+    "FP": 532,
+    "TN": 1000,
+    "FN": 188,
+    "accuracy": 0.6392785571142284,
+    "precision": 0.3415841584158416,
+    "recall": 0.5948275862068966,
+    "specificity": 0.6527415143603134,
+    "f1": 0.4339622641509434,
+    "auc": 0.6608895291257766
+  },
+  "two_stage_metrics": {
+    "TP": 268,
+    "FP": 504,
+    "TN": 1028,
+    "FN": 196,
+    "accuracy": 0.6492985971943888,
+    "precision": 0.3471502590673575,
+    "recall": 0.5775862068965517,
+    "specificity": 0.6710182767624021,
+    "f1": 0.4336569579288026
+  },
+  "improvements": {
+    "fp_change": -28,
+    "fp_change_percent": -5.263157894736842,
+    "recall_change_percent": -1.7241379310344862,
+    "specificity_change": 0.018276762402088753,
+    "precision_change": 0.005566100651515915,
+    "f1_change": -0.00030530622214081093,
+    "stage1_efficiency_percent": 2.404809619238477
+  }
+}

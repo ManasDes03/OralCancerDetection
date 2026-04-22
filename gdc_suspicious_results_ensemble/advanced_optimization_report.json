@@ -1,0 +1,96 @@
+{
+  "checkpoints": {
+    "positive_used": "gdc_suspicious_results/best_phase1_weights.h5",
+    "negative_used": "gdc_suspicious_results_negative/best_phase1_weights.h5"
+  },
+  "split": {
+    "val_size": 466,
+    "test_size": 480,
+    "val_suspicious": 146,
+    "test_suspicious": 143
+  },
+  "target_recall_constraint": 0.93,
+  "baseline_threshold_on_val": {
+    "threshold": 0.2,
+    "recall": 0.9315068493150684,
+    "specificity": 0.196875,
+    "accuracy": 0.4270386266094421,
+    "fp": 257
+  },
+  "ensemble_candidates_thresholds_on_val": {
+    "avg_ensemble": {
+      "threshold": 0.46,
+      "recall": 0.9452054794520548,
+      "specificity": 0.296875,
+      "accuracy": 0.5,
+      "fp": 225
+    },
+    "contra_ensemble": {
+      "threshold": 0.35000000000000003,
+      "recall": 0.9383561643835616,
+      "specificity": 0.31875,
+      "accuracy": 0.5128755364806867,
+      "fp": 218
+    },
+    "stacked_ensemble": {
+      "threshold": 0.32,
+      "recall": 0.9315068493150684,
+      "specificity": 0.303125,
+      "accuracy": 0.5,
+      "fp": 223
+    }
+  },
+  "winner": "contra_ensemble",
+  "winner_threshold": 0.35000000000000003,
+  "test_metrics": {
+    "baseline": {
+      "name": "positive_baseline",
+      "threshold": 0.2,
+      "auc": 0.5739038409661554,
+      "pr_auc": 0.39911548809543546,
+      "accuracy": 0.39166666666666666,
+      "precision": 0.3104325699745547,
+      "recall": 0.8531468531468531,
+      "specificity": 0.19584569732937684,
+      "f1": 0.4552238805970149,
+      "tn": 66,
+      "fp": 271,
+      "fn": 21,
+      "tp": 122
+    },
+    "optimized": {
+      "name": "contra_ensemble",
+      "threshold": 0.35000000000000003,
+      "auc": 0.6180407129962027,
+      "pr_auc": 0.47132749786147893,
+      "accuracy": 0.42291666666666666,
+      "precision": 0.3179347826086957,
+      "recall": 0.8181818181818182,
+      "specificity": 0.2551928783382789,
+      "f1": 0.4579256360078278,
+      "tn": 86,
+      "fp": 251,
+      "fn": 26,
+      "tp": 117
+    }
+  },
+  "improvement": {
+    "fp_reduction_percent": 7.380073800738007,
+    "recall_change_percent": -4.098360655737697,
+    "f1_delta": 0.0027017554108129116,
+    "specificity_delta": 0.05934718100890207
+  },
+  "significance": {
+    "mcnemar_pvalue": 0.04237103349160362,
+    "mcnemar_b": 23,
+    "mcnemar_c": 8,
+    "recall_diff_95ci": [
+      -0.06819482997918118,
+      -0.007192959917780135
+    ],
+    "fp_diff_95ci": [
+      -30.0,
+      -10.0
+    ]
+  }
+}

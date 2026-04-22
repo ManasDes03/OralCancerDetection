@@ -1,0 +1,22 @@
+Advanced Ensemble Optimization Summary
+================================================
+
+Winner: contra_ensemble
+Threshold: 0.350
+Target recall constraint: 0.93
+
+Baseline (test):
+  recall=0.8531, specificity=0.1958, fp=271, f1=0.4552
+Optimized (test):
+  recall=0.8182, specificity=0.2552, fp=251, f1=0.4579
+
+Delta:
+  fp_reduction_percent=+7.38%
+  recall_change_percent=-4.10%
+  specificity_delta=+0.0593
+  f1_delta=+0.0027
+
+Significance:
+  McNemar p-value=0.042371 (b=23, c=8)
+  Recall diff 95% CI=(-0.06819482997918118, -0.007192959917780135)
+  FP diff 95% CI=(-30.0, -10.0)

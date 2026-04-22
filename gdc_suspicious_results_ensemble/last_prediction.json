@@ -1,0 +1,30 @@
+{
+  "image": "data/gdc_oral_cancer_dataset/images/1/image_1.jpeg",
+  "positive_checkpoint_used": "gdc_suspicious_results/best_phase1_weights.h5",
+  "negative_checkpoint_used": "gdc_suspicious_results_negative/best_phase1_weights.h5",
+  "positive_model_output": 0.8860546350479126,
+  "negative_model_output": 0.30946120619773865,
+  "ensemble_average_confidence": 0.7557107408841451,
+  "consensus_strength": 1.0,
+  "votes_suspicious": 3,
+  "total_strategies": 3,
+  "final_decision": "SUSPICIOUS",
+  "threshold": 0.5,
+  "strategies_used": [
+    "agreement_voting",
+    "contradiction_score",
+    "weighted_average"
+  ],
+  "strategy_agreement_voting": {
+    "confidence": 0.6905387938022614,
+    "reasoning": "\u2705 STRONG AGREEMENT: both models say suspicious (0.886, 0.691)"
+  },
+  "strategy_contradiction_score": {
+    "confidence": 0.788296714425087,
+    "reasoning": "CONFIDENT (models agree): P+=(0.886, P-=0.691), disagreement=0.196, final=0.788"
+  },
+  "strategy_weighted_average": {
+    "confidence": 0.788296714425087,
+    "reasoning": "Weighted: 0.886\u00d70.50 + 0.691\u00d70.50 = 0.788"
+  }
+}

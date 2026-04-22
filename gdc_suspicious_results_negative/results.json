@@ -1,0 +1,53 @@
+{
+  "config": {
+    "backbone": "efficientnetb0",
+    "img_height": 224,
+    "img_width": 224,
+    "batch_size": 8,
+    "initial_lr": 0.0002,
+    "fine_tune_lr": 2e-05,
+    "initial_epochs": 22,
+    "fine_tune_epochs": 20,
+    "fine_tune_trainable_layers": 60,
+    "focal_loss_alpha": 0.78,
+    "focal_loss_gamma": 2.0,
+    "warmup_epochs": 2,
+    "target_pos_ratio": 0.45,
+    "early_stopping_patience": 10,
+    "tta_flip": true,
+    "monitor_metric": "val_auc",
+    "class_weights": {
+      "0": 1.6286407766990292,
+      "1": 1.082258064516129
+    }
+  },
+  "test_accuracy": 0.7126948775055679,
+  "roc_auc": 0.5904200338282277,
+  "pr_auc": 0.7501583693835785,
+  "best_threshold": 0.05,
+  "best_val_f2": 0.9145021620602476,
+  "confusion_matrix": [
+    [
+      17,
+      119
+    ],
+    [
+      10,
+      303
+    ]
+  ],
+  "class_distribution": {
+    "train": {
+      "0": 618,
+      "1": 1395
+    },
+    "val": {
+      "0": 163,
+      "1": 339
+    },
+    "test": {
+      "1": 313,
+      "0": 136
+    }
+  }
+}
