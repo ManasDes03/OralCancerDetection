@@ -1,0 +1,22 @@
+GDC HIGH-RISK vs LOW-RISK CLASSIFICATION
+======================================================================
+
+Test Accuracy: 0.2179
+ROC-AUC: 0.6394
+
+PR-AUC: 0.0811
+
+Classification Report:
+              precision    recall  f1-score   support
+
+    Low-risk     0.9750    0.1871    0.3139       417
+   High-risk     0.0478    0.8947    0.0907        19
+
+    accuracy                         0.2179       436
+   macro avg     0.5114    0.5409    0.2023       436
+weighted avg     0.9346    0.2179    0.3042       436
+
+
+Confusion Matrix:
+[[ 78 339]
+ [  2  17]]
