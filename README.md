@@ -2,6 +2,14 @@
 
 A comprehensive deep learning system for automated 3-class oral cancer classification using MobileNetV2 with optimized training pipelines and patient-aware evaluation.
 
+## 📌 Start Here (Handover)
+
+If you are taking over this repository, read these first:
+
+1. [PROJECT_HANDOVER.md](PROJECT_HANDOVER.md) - transfer notes, environments, exact run commands, and next steps.
+2. [EXPERIMENTS_INDEX.md](EXPERIMENTS_INDEX.md) - route-by-route script index.
+3. [SETUP_GUIDE.md](SETUP_GUIDE.md) - full environment and dataset setup.
+
 ## 🎯 Project Overview
 
 This project implements an advanced oral cancer detection system that classifies oral cavity images into three categories:
